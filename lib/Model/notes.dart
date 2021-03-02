@@ -48,7 +48,7 @@ class Notes{
     Map map= new Map<String,dynamic>();
     map['notesTitle']=_title;
     map['notesId']=_id;
-    map['notesDesc']=_desc;
+    map['noteDesc']=_desc;
     map['priority']=_priority;
     map['date']=_date;
     map['categoryId']=_categoryId;
@@ -58,7 +58,7 @@ class Notes{
    Notes.fromMap(Map<String,dynamic> map){
    this._id=map['notesId'];
    this._title=map['notesTitle'];
-   this._desc=map['notesDesc'];
+   this._desc=map['noteDesc'];
    this._priority=map['priority'];
    this._date=map['date'];
    this._categoryId=map['categoryId'];
