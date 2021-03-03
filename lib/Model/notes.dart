@@ -1,19 +1,58 @@
 class Notes{
-  int _id;
-  String _title;
-  String _desc;
+  int _notesId;
+  String _notesTitle;
+  String _noteDesc;
   String _date;
-  int _priority;
+  String _priority;
   int _categoryId;
+  String categoryTitle;
 
-  Notes(this._title,this._categoryId, this._desc, this._date, this._priority);
 
-  Notes.id(this._id, this._title, this._desc, this._date, this._priority);
+  Notes( this._notesTitle, this._noteDesc, this._date,
+      this._priority, this._categoryId);
 
-  int get priority => _priority;
 
-  set priority(int value) {
-    _priority = value;
+  Notes.getId(this._notesId, this._notesTitle, this._noteDesc, this._date,
+      this._priority, this._categoryId);
+
+
+  int get notesId => _notesId;
+
+  set notesId(int value) {
+    _notesId = value;
+  }
+
+  Map<String,dynamic> toMap(){
+    Map map= new Map<String,dynamic>();
+    map['notesTitle']=_notesTitle;
+    map['notesId']=_notesId;
+    map['noteDesc']=_noteDesc;
+    map['priority']=_priority;
+    map['date']=_date;
+    map['categoryId']=_categoryId;
+    return map;
+  }
+
+   Notes.fromMap(Map<String,dynamic> map){
+   this._notesId=map['notesId'];
+   this._notesTitle=map['notesTitle'];
+   this._noteDesc=map['noteDesc'];
+   this._priority=map['priority'];
+   this._date=map['date'];
+   this._categoryId=map['categoryId'];
+   this.categoryTitle=map['categoryName'];
+  }
+
+  String get notesTitle => _notesTitle;
+
+  set notesTitle(String value) {
+    _notesTitle = value;
+  }
+
+  String get noteDesc => _noteDesc;
+
+  set noteDesc(String value) {
+    _noteDesc = value;
   }
 
   String get date => _date;
@@ -22,47 +61,15 @@ class Notes{
     _date = value;
   }
 
-  String get desc => _desc;
+  String get priority => _priority;
 
-  set desc(String value) {
-    _desc = value;
+  set priority(String value) {
+    _priority = value;
   }
 
-  String get title => _title;
+  int get categoryId => _categoryId;
 
-  set title(String value) {
-    _title = value;
+  set categoryId(int value) {
+    _categoryId = value;
   }
-
-  int get id => _id;
-
-  set id(int value) {
-    _id = value;
-  }
-  int get categoryId =>_categoryId;
-  set categoryId(int value){
-    _categoryId=value;
-  }
-
-  Map<String,dynamic> toMap(){
-    Map map= new Map<String,dynamic>();
-    map['notesTitle']=_title;
-    map['notesId']=_id;
-    map['noteDesc']=_desc;
-    map['priority']=_priority;
-    map['date']=_date;
-    map['categoryId']=_categoryId;
-    return map;
-  }
-
-   Notes.fromMap(Map<String,dynamic> map){
-   this._id=map['notesId'];
-   this._title=map['notesTitle'];
-   this._desc=map['noteDesc'];
-   this._priority=map['priority'];
-   this._date=map['date'];
-   this._categoryId=map['categoryId'];
-
-  }
-
 }

@@ -84,7 +84,7 @@ class DatabaseHelper {
 
   Future<List<Map<String, dynamic>>> getAllNotes() async {
     Database db = await _getDatabase();
-    var result = await db.query("notes",orderBy: ' id DESC ');
+    var result = await db.rawQuery("select * from notes inner join category on category.categoryId = notes.categoryId; ");
     return result;
   }
 
@@ -96,14 +96,24 @@ class DatabaseHelper {
 
   Future<int> deleteNote(int id) async {
     Database db = await _getDatabase();
-    var result = await db.delete("notes", where: 'id=?', whereArgs: [id]);
+    var result = await db.delete("notes", where: 'notesId=?', whereArgs: [id]);
     return result;
   }
 
   Future<int> updateNote(Notes notes) async {
     Database db = await _getDatabase();
     var result = await db
-        .update("notes", notes.toMap(), where: 'id=?', whereArgs: [notes.id]);
+        .update("notes", notes.toMap(), where: 'notesId=?', whereArgs: [notes.notesId]);
     return result;
   }
+
+  Future<List<Notes>> getNotesList() async{
+   var list= new List<Notes>();
+   var notes= await getAllNotes();
+   for( Map map in notes){
+     list.add(Notes.fromMap(map));
+   }
+    return list;
+  }
+
 }

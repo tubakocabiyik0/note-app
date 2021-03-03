@@ -6,8 +6,10 @@ import 'package:notes_app/utils/db_helper.dart';
 
 class NoteAddPAge extends StatefulWidget {
   String barTitle;
+  Notes notes;
+  List noteList;
 
-  NoteAddPAge(this.barTitle);
+  NoteAddPAge({this.barTitle, this.notes, this.noteList});
 
   @override
   State<StatefulWidget> createState() {
@@ -16,7 +18,7 @@ class NoteAddPAge extends StatefulWidget {
 }
 
 class StateAdd extends State<NoteAddPAge> {
-  var keyScaff= GlobalKey<ScaffoldState>();
+  var keyScaff = GlobalKey<ScaffoldState>();
   DatabaseHelper databaseHelper = new DatabaseHelper();
   List<Category> categories;
   int categoryId;
@@ -178,17 +180,35 @@ class StateAdd extends State<NoteAddPAge> {
       padding: const EdgeInsets.all(25.0),
       child: RaisedButton(
         onPressed: () {
-          databaseHelper
-              .addNote(Notes(getTitle.text, categoryId, getDesc.text,
-                  DateTime.now().toString(), priority))
-              .then((dataId) {
-            if (dataId > 0) {
-              keyScaff.currentState.showSnackBar(SnackBar(content: Text("note added")));
-            }
-          });
+          if (widget.barTitle == "Add new note") {
+            databaseHelper
+                .addNote(Notes(getTitle.text, getDesc.text,
+                    DateTime.now().toString(), priority.toString(), categoryId))
+                .then((dataId) {
+              if (dataId > 0) {
+                keyScaff.currentState
+                    .showSnackBar(SnackBar(content: Text("note added")));
+                Navigator.pop(context);
+              }
+            });
+          } else {
+            databaseHelper
+                .updateNote(Notes.getId(
+                    widget.notes.notesId,
+                    getTitle.text,
+                    getDesc.text,
+                    DateTime.now().toString(),
+                    priority.toString(),
+                    categoryId))
+                .then((value) {
+              keyScaff.currentState
+                  .showSnackBar(SnackBar(content: Text("note updated")));
+              Navigator.pop(context);
+            });
+          }
         },
         color: Colors.orange.shade100,
-        child: Text("add"),
+        child: Text("save"),
       ),
     );
   }
