@@ -21,10 +21,12 @@ class StateAdd extends State<NoteAddPAge> {
   var keyScaff = GlobalKey<ScaffoldState>();
   DatabaseHelper databaseHelper = new DatabaseHelper();
   List<Category> categories;
-  int categoryId;
+  int categoryId ;
   int priority;
-  var getTitle = TextEditingController();
-  var getDesc = TextEditingController();
+  String getTitle ;
+  String getDesc ;
+  var key = GlobalKey<FormState>();
+
 
   @override
   void initState() {
@@ -41,6 +43,8 @@ class StateAdd extends State<NoteAddPAge> {
 
   @override
   Widget build(BuildContext context) {
+    widget.barTitle=="Add new note" ? categoryId =null: categoryId=widget.notes.categoryId;
+    widget.barTitle=="Add new note" ? priority =null: priority=int.parse(widget.notes.priority);
     return Scaffold(
       key: keyScaff,
       resizeToAvoidBottomInset: false,
@@ -99,12 +103,18 @@ class StateAdd extends State<NoteAddPAge> {
 
   textformFields() {
     return Form(
+      key: key,
       child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextFormField(
-              controller: getTitle,
+              onSaved: (getValue){
+                setState(() {
+                  getTitle=getValue;
+                });
+              },
+              initialValue:widget.barTitle == "Add new note" ? "" :widget.notes.notesTitle ,
               decoration: InputDecoration(
                 hintText: "title",
                 enabledBorder: OutlineInputBorder(
@@ -121,7 +131,12 @@ class StateAdd extends State<NoteAddPAge> {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextFormField(
-              controller: getDesc,
+              initialValue:widget.barTitle == "Add new note" ? "" :widget.notes.noteDesc,
+              onSaved: (getvalue){
+                setState(() {
+                  getDesc=getvalue;
+                });
+              },
               maxLines: 5,
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
@@ -153,6 +168,7 @@ class StateAdd extends State<NoteAddPAge> {
           ),
         ),
         DropdownButton(
+
             value: priority,
             items: priorityList(),
             onChanged: (value) {
@@ -181,8 +197,9 @@ class StateAdd extends State<NoteAddPAge> {
       child: RaisedButton(
         onPressed: () {
           if (widget.barTitle == "Add new note") {
+            key.currentState.save();
             databaseHelper
-                .addNote(Notes(getTitle.text, getDesc.text,
+                .addNote(Notes(getTitle, getDesc,
                     DateTime.now().toString(), priority.toString(), categoryId))
                 .then((dataId) {
               if (dataId > 0) {
@@ -192,11 +209,12 @@ class StateAdd extends State<NoteAddPAge> {
               }
             });
           } else {
+            key.currentState.save();
             databaseHelper
                 .updateNote(Notes.getId(
                     widget.notes.notesId,
-                    getTitle.text,
-                    getDesc.text,
+                    getTitle,
+                    getDesc,
                     DateTime.now().toString(),
                     priority.toString(),
                     categoryId))
